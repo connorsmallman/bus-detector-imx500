@@ -120,7 +120,7 @@ def draw_detections(request, stream="main"):
 
 if __name__ == "__main__":
 
-    model = "/usr/shared/imx500-models/imx500_network_ssd_mobilenetv2_fpnlite_320x320_pp.rpk"
+    model = "models/imx500_network_ssd_mobilenetv2_fpnlite_320x320_pp.rpk"
     # model = "./imx500-models/imx500_network_efficientdet_lite0_pp.rpk"
     # model = "./imx500-models/imx500_network_nanodet_plus_416x416.rpk"
     # model = "./imx500-models/imx500_network_nanodet_plus_416x416_pp.rpk"
@@ -177,12 +177,12 @@ if __name__ == "__main__":
         if not os.path.exists(data_folder):
             os.makedirs(data_folder)
 
-        try:
-            picam2.capture_file(f"{data_folder}/{datetime.now()}.jpg")
-        except:
-            print("Failed to save image")
-
-        if (len(last_results) > 0):
+        if len(last_results) > 0:
             for result in last_results:
                 if result.category == 5:
                     print("Bus detected!")
+                    try:
+                        picam2.capture_file(f"{data_folder}/{datetime.now()}.jpg")
+                    except Exception as e:
+                        print(e)
+                        print("Failed to save image")
