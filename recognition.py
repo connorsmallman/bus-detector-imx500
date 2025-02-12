@@ -181,8 +181,9 @@ if __name__ == "__main__":
 
         if len(last_results) > 0:
             for result in last_results:
-                print(f"Category: {result.category}, Confidence: {result.conf}")
-                if result.category == 5:
+                label = get_labels()[int(result.category.item())]
+                print(f"Label: {label}, Confidence: {result.conf}")
+                if label == "bus" and result.conf > 0.6:
                     print("Bus detected!")
                     try:
                         # Record file to SD card
