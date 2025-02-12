@@ -169,19 +169,23 @@ if __name__ == "__main__":
     picam2.pre_callback = draw_detections
 
     print("Started!")
+
+    data_folder = f"../data/images/{datetime.today()}/"
+
+    if not os.path.exists(data_folder):
+        os.makedirs(data_folder)
+
     while True:
         last_results = parse_detections(picam2.capture_metadata())
-        # Record file to SD card
-        data_folder = f"../data/images/{datetime.today()}/"
-
-        if not os.path.exists(data_folder):
-            os.makedirs(data_folder)
+        print("Checking for bus...")
+        print(last_results)
 
         if len(last_results) > 0:
             for result in last_results:
                 if result.category == 5:
                     print("Bus detected!")
                     try:
+                        # Record file to SD card
                         picam2.capture_file(f"{data_folder}/{datetime.now()}.jpg")
                     except Exception as e:
                         print(e)
