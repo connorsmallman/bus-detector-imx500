@@ -27,35 +27,6 @@ threshold = 0.55
 iou = 0.65
 max_detections = 10
 
-
-def send_udp_message(message: bytes, port: int):
-    global last_message_time
-    current_time = time.time()  # Get the current time in seconds
-
-    # Check if the cooldown period has passed
-    if current_time - last_message_time < MESSAGE_COOLDOWN:
-        print("Ignoring send request, still in cooldown period.")
-        return  # Skip sending the message
-
-    last_message_time = current_time
-
-    interfaces = socket.getaddrinfo(host=socket.gethostname(), port=None, family=socket.AF_INET)
-    allips = [ip[-1][0] for ip in interfaces]
-
-    # Create the socket once
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-
-    for ip in allips:
-        try:
-            print(f'sending on {ip}')
-            # No need to bind the socket unless necessary
-            sock.sendto(message, ("255.255.255.255", port))
-        except Exception as e:
-            print(f"Error sending message on {ip}: {e}")
-    sock.close()
-
-
 class Detection:
     def __init__(self, coords, category, conf, metadata):
         """Create a Detection object, recording the bounding box, category and confidence."""
@@ -196,6 +167,7 @@ if __name__ == "__main__":
 
     last_results = None
     picam2.pre_callback = draw_detections
+
     print("Started!")
     while True:
         last_results = parse_detections(picam2.capture_metadata())
@@ -213,5 +185,4 @@ if __name__ == "__main__":
         if (len(last_results) > 0):
             for result in last_results:
                 if result.category == 5:
-                    print("Bus detected, sending BUS!")
-                    send_udp_message(MESSAGE, PORT)
+                    print("Bus detected!")
