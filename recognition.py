@@ -178,10 +178,10 @@ if __name__ == "__main__":
     while True:
         last_results = parse_detections(picam2.capture_metadata())
         print("Checking for bus...")
-        print(last_results)
 
         if len(last_results) > 0:
             for result in last_results:
+                print(f"Category: {result.category}, Confidence: {result.conf}, Label: {get_labels()[result.category]}")
                 if result.category == 5:
                     print("Bus detected!")
                     try:
