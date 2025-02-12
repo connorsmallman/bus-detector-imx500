@@ -181,7 +181,7 @@ if __name__ == "__main__":
 
         if len(last_results) > 0:
             for result in last_results:
-                print(f"Category: {result.category}, Confidence: {result.conf}, Label: {get_labels()[result.category]}")
+                print(f"Category: {result.category}, Confidence: {result.conf}")
                 if result.category == 5:
                     print("Bus detected!")
                     try:
